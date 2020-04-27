@@ -502,8 +502,7 @@ int I420ToNV12(const uint8_t* src_y,
                int dst_stride_uv,
                int width,
                int height) {
-  if (!src_y || !src_u || !src_v || !dst_y || !dst_uv || width <= 0 ||
-      height == 0) {
+  if (!src_u || !src_v || !dst_uv || width <= 0 || height == 0) {
     return -1;
   }
   int halfwidth = (width + 1) / 2;
