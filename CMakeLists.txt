@@ -2,13 +2,17 @@
 # Originally created for "roxlu build system" to compile libyuv on windows
 # Run with -DTEST=ON to build unit tests
 
-PROJECT ( YUV C CXX )	# "C" is required even for C++ projects
-CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
+cmake_minimum_required(VERSION 3.15)
+project(libyuv 
+          VERSION 1.0 
+          LANGUAGES C CXX 
+)	# "C" is required even for C++ projects
+
 OPTION( TEST "Built unit tests" OFF )
 OPTION( USE_JPEG "Build with libjpeg" OFF)
-OPTION( YUV_SHARED "Build shared library" ON)
+OPTION( YUV_SHARED "Build shared library" OFF)
 OPTION( YUV_STATIC "Build static library" ON)
-OPTION( BUILD_EXECUTABLE "Build yuvconvert executable" ON)
+OPTION( BUILD_EXECUTABLE "Build yuvconvert executable" OFF)
 
 SET ( ly_base_dir	${PROJECT_SOURCE_DIR} )
 SET ( ly_src_dir	${ly_base_dir}/source )
@@ -24,11 +28,10 @@ LIST ( SORT			ly_source_files )
 FILE ( GLOB_RECURSE	ly_unittest_sources ${ly_tst_dir}/*.cc )
 LIST ( SORT			ly_unittest_sources )
 
-INCLUDE_DIRECTORIES( BEFORE ${ly_inc_dir} )
-
 # this creates the static library (.a)
 if (YUV_STATIC)
   ADD_LIBRARY				( ${ly_lib_static} STATIC ${ly_source_files} )
+  target_include_directories(${ly_lib_static} PUBLIC ${ly_inc_dir})
 endif()
 
 # this creates the shared library (.so)
