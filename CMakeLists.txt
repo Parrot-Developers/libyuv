@@ -8,9 +8,10 @@ project(libyuv
           LANGUAGES C CXX 
 )	# "C" is required even for C++ projects
 
+
 OPTION( TEST "Built unit tests" OFF )
 OPTION( USE_JPEG "Build with libjpeg" OFF)
-OPTION( YUV_SHARED "Build shared library" OFF)
+OPTION( YUV_SHARED "Build shared library" ON)
 OPTION( YUV_STATIC "Build static library" ON)
 OPTION( BUILD_EXECUTABLE "Build yuvconvert executable" OFF)
 
@@ -18,6 +19,7 @@ SET ( ly_base_dir	${PROJECT_SOURCE_DIR} )
 SET ( ly_src_dir	${ly_base_dir}/source )
 SET ( ly_inc_dir	${ly_base_dir}/include )
 SET ( ly_tst_dir	${ly_base_dir}/unit_test )
+
 SET ( ly_lib_name	yuv )
 SET ( ly_lib_static	${ly_lib_name} )
 SET ( ly_lib_shared	${ly_lib_name}_shared )
@@ -31,14 +33,22 @@ LIST ( SORT			ly_unittest_sources )
 # this creates the static library (.a)
 if (YUV_STATIC)
   ADD_LIBRARY				( ${ly_lib_static} STATIC ${ly_source_files} )
-  target_include_directories(${ly_lib_static} PUBLIC ${ly_inc_dir})
+  TARGET_INCLUDE_DIRECTORIES(${ly_lib_static} PUBLIC ${ly_inc_dir})
+  SET_TARGET_PROPERTIES(${ly_lib_static} PROPERTIES
+                         POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS})
 endif()
 
 # this creates the shared library (.so)
 if (YUV_SHARED)
-  ADD_LIBRARY				( ${ly_lib_shared} SHARED ${ly_source_files} )
+  ADD_LIBRARY( ${ly_lib_shared} SHARED ${ly_source_files} )
   SET_TARGET_PROPERTIES	( ${ly_lib_shared} PROPERTIES OUTPUT_NAME "${ly_lib_name}" )
   SET_TARGET_PROPERTIES	( ${ly_lib_shared} PROPERTIES PREFIX "lib" )
+  TARGET_INCLUDE_DIRECTORIES(${ly_lib_shared} PUBLIC ${ly_inc_dir})
+
+# state that libpomp need PIC when the default is shared libraries
+  SET_TARGET_PROPERTIES( ${ly_lib_shared} PROPERTIES
+                         POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS}
+    )
 endif()
 
 # this creates the conversion tool
@@ -88,7 +98,6 @@ if(TEST)
     target_link_libraries(libyuv_unittest glibc-compat)
   endif()
 endif()
-
 
 # install the conversion tool, .so, .a, and all the header files
 if (BUILD_EXECUTABLE)
