@@ -12,7 +12,7 @@ project(libyuv
 OPTION( TEST "Built unit tests" OFF )
 OPTION( USE_JPEG "Build with libjpeg" OFF)
 OPTION( YUV_SHARED "Build shared library" ON)
-OPTION( YUV_STATIC "Build static library" ON)
+OPTION( YUV_STATIC "Build static library" OFF)
 OPTION( BUILD_EXECUTABLE "Build yuvconvert executable" OFF)
 
 SET ( ly_base_dir	${PROJECT_SOURCE_DIR} )
