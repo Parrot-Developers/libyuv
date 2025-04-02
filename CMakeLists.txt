@@ -3,7 +3,7 @@
 # Run with -DTEST=ON to build unit tests
 
 PROJECT ( YUV C CXX )	# "C" is required even for C++ projects
-CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
+CMAKE_MINIMUM_REQUIRED( VERSION 3.5 )
 OPTION( TEST "Built unit tests" OFF )
 OPTION( USE_JPEG "Build with libjpeg" OFF)
 OPTION( YUV_SHARED "Build shared library" ON)
